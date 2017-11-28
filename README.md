@@ -1,2 +1,2 @@
 # simple-compiler
-A simple implementation of compiler phases in Java.
+By Mohamed Ahmed
