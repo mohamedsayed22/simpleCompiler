@@ -1,4 +1,6 @@
-package compiler;
+package simplercompiler;
+
+import java.util.Arrays;
 
 /**
  *
@@ -57,9 +59,9 @@ public class Scanner {
         /**
          * Complete the Following.
          */
-        String sub = "";
-        String sum = "";
-        String id = "";
+        String sub = "\\bsub\\b";
+        String sum = "\\bsum\\b";
+        String id = "\\bid\\b";
         
     }
     
@@ -77,9 +79,11 @@ public class Scanner {
          * 
          * 2- Complete the following statement to perform what is required to
          * split the String line into an array of strings.
-         */
+         */  	
         
-        //this.lexemes = ;
+        this.lexemes = line.split("\\s+");
+        
+        System.out.println(Arrays.toString(this.lexemes));
         
     }
     
