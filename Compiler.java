@@ -1,4 +1,4 @@
-package simplecompiler;
+package compiler;
 
 public class Compiler {
 
@@ -10,12 +10,18 @@ public class Compiler {
         /**
          * The input line
          */
-        String line = "mul 3 sub 2 sum 1 3 4";
+        String line = "mul 3 sub 2 sum 1 3";
         
         /**
          * Creating a Scanner object
          */
         Scanner scanner = new Scanner( line );
+        
+        /**
+         * Creating a parser object using the symbolTabe as a parameter.
+         */
+        
+        Parser parser = new Parser( scanner.getSymbolTable() );
         
     }
     
