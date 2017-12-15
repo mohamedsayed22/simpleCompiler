@@ -1,92 +1,160 @@
-package simplercompiler;
+package compiler;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-/**
- *
- * @author Mdhem
- */
 public class Scanner {
+    
     /**
-     * A string attribute that contains the input line
+     * Holds the input line
      */
     private String line;
     
     /**
-     * An array of strings that contains lexemes.
-     * For example:
-     * if the input is "mul 3 sub 2 sum 1 3 4" 
-     * the resultant lexemes array will be:
-     * 
-     * ---------------------------------------
-     * | mul | 3 | sub | 2 | sum | 1 | 3 | 4 |
-     * ---------------------------------------
+     * holds the symbol table 
      */
-    private String[] lexemes;
+    private List<HashMap> symbolTable = new ArrayList<>();
+    
+    /**
+     * Holds the language
+     */
+    private List<HashMap> language = new ArrayList<>();
     
     
     /**
-     * A constructor with a single String param.
-     * @param line 
+     * A constructor with a single String parameter
+     * @param line holds the input line
      */
     public Scanner(String line) {
+        
+        // Sets the line attribute
+        this.line = line;
         
         // Build the language
         this.language();
         
-        // Extract lexemes.
-        this.lexemes(line);
+        // Extract lexemes and build symbol table with tokens
+        this.tokens();
     }
     
     /**
      * Builds our language.
-     * //TODO Complete this method implementation
+     *
      */
     private void language(){
         
-        /**
-         * ------------------------------------------
-         * Required Task
-         * ------------------------------------------
-         * 
-         * Write down the regex that match the following strings 
-         * as mentioned in our Class and as declared in each variable name.
-         */
+        HashMap number  = new HashMap();
+        HashMap mul     = new HashMap();
+        HashMap div     = new HashMap();
+        HashMap sum     = new HashMap();
+        HashMap sub     = new HashMap();
+        HashMap id      = new HashMap();
+        HashMap keywords = new HashMap();
         
-        String number = "\\d+";
-        String mul = "\\bmul\\b";
+
+
+        //Build the regex of number
+        number.put("type","keywords");
+        number.put("regex","if|for|while|switche");
+
+
+        // Build the regex of numbers
+        number.put("type", "number");
+        number.put("regex", "\\d+");
+        this.language.add( number );
         
-        /**
-         * Complete the Following.
-         */
-        String sub = "\\bsub\\b";
-        String sum = "\\bsum\\b";
-        String id = "\\bid\\b";
+        // Build the regex of Multiplication operation
+        mul.put("type", "operation");
+        mul.put("regex", "\\bmul\\b");
+        this.language.add( mul );
+        
+        // Build the regex of division
+        div.put("type", "operation");
+        div.put("regex", "\\bdiv\\b");
+        this.language.add( div );
+        
+        // Build the regex of addition
+        sum.put("type", "operation");
+        sum.put("regex", "\\bsum\\b");
+        this.language.add( sum );
+        
+        // Build the regex of subtraction
+        sub.put("type", "operation");
+        sub.put("regex", "\\bsub\\b");
+        this.language.add( sub );
+        
+        // Build the regex of identifier
+        id.put("type", "identifier");
+        id.put("regex", "([a-zA-Z]|_)([a-zA-Z]+|[0-9]+|_+)*");
+        this.language.add( id );
+        
         
     }
     
     /**
-     * Converts the input string to an array of strings. 
-     * Check the comment on line 18
+     * Extract lexemes and build symbol table with tokens
      * 
      * @param String line
      * 
      */
-    private void lexemes(String line){
+    private void tokens(){
         
-        /**
-         * 1- Uncomment the following statement.
-         * 
-         * 2- Complete the following statement to perform what is required to
-         * split the String line into an array of strings.
-         */  	
+        for(String lexeme : this.line.split(" ")){
+            
+            HashMap token = new HashMap();
+            token.put("lexeme", lexeme);
+            
+            String lexemeType = this.getLexemeType( lexeme );
+            
+            token.put("type", lexemeType );
+            
+            if( "operation".equals(lexemeType) || "number".equals(lexemeType)){
+                
+                token.put( "value", lexeme );
+                
+            }else{
+                
+                token.put( "value", "" );
+                
+            }
+            
+            this.symbolTable.add( token );
+           
+        }
+         
+    }
+    
+    /**
+     * Gets the lexeme type form the language map
+     * @param String lexeme
+     * @return String
+     */
+    private String getLexemeType(String lexeme){
         
-        this.lexemes = line.split("\\s+");
-        
-        System.out.println(Arrays.toString(this.lexemes));
+        for(HashMap word : this.language){
+            
+            if( lexeme.matches( word.get("regex").toString() ) ){
+                
+               return word.get("type").toString();
+               
+            }
+            
+        }
+    
+        return "UNKNOWN";
         
     }
     
+    /**
+     * Gets the symbol table
+     * @return List<HashMap> The symbol table accessor/ Getter
+     */
+    public List getSymbolTable(){
+        
+        return this.symbolTable;
+        
+    }
     
     
 }
